@@ -39,4 +39,3 @@ print(matched_results[cols].sort_values(
 print("Scores under 0.8")
 print(matched_results[cols].query("best_match_score <= .80").sort_values(
     by=['best_match_score'], ascending=False).head(5))
-
