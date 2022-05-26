@@ -27,7 +27,7 @@ def comparisons_timed(indexer):
 
     number_comparisons = len(candidates)
     runtime = round(time() - start, accuracy)
-    return number_comparisons, runtime
+    return number_comparisons, runtime, features
 
 
 # Load hospital data
@@ -41,7 +41,7 @@ indexer = recordlinkage.Index()
 # Full() indexes all pairs (14M)
 indexer.full()
 
-number_comparisons, runtime = comparisons_timed(indexer)
+number_comparisons, runtime, features = comparisons_timed(indexer)
 print(f"Number of comparisons using all pairs: {number_comparisons} in {runtime} seconds")
 
 
@@ -50,7 +50,7 @@ print(f"Number of comparisons using all pairs: {number_comparisons} in {runtime}
 indexer = recordlinkage.Index()
 indexer.block(left_on='State', right_on='Provider State')
 
-number_comparisons, runtime = comparisons_timed(indexer)
+number_comparisons, runtime, features = comparisons_timed(indexer)
 print(f"Number of comparisons using reduced pairs: {number_comparisons} in {runtime} seconds")
 
 
@@ -58,5 +58,14 @@ print(f"Number of comparisons using reduced pairs: {number_comparisons} in {runt
 indexer = recordlinkage.Index()
 indexer.sortedneighbourhood(left_on='State', right_on='Provider State')
 
-number_comparisons, runtime = comparisons_timed(indexer)
+number_comparisons, runtime, features = comparisons_timed(indexer)
 print(f"Number of comparisons reduced pairs and allowing minor spelling mistakes: {number_comparisons} in {runtime} seconds")
+
+print(features)
+
+# 987848 rows with no matching values
+print(features.sum(axis=1).value_counts().sort_index(ascending=False))
+
+# All records with 2 or 3 matches
+potential_matches = features[features.sum(axis=1) > 1].reset_index()
+potential_matches['Score'] = potential_matches.loc[:, 'City':'Hosp_Address'].sum(axis=1)
