@@ -16,9 +16,6 @@ indexer.full()
 # The total amount of comparisons
 start = time()
 candidates = indexer.index(hospital_accounts, hospital_reimbursement)
-number_comparisons = len(candidates)
-runtime = round(time() - start, 3)
-print(f"Number of comparisons using all pairs: {number_comparisons} in {runtime} seconds")
 
 # Set up the comparison logic
 compare = recordlinkage.Compare()
@@ -37,6 +34,11 @@ compare.string('Address',
                label='Hosp_Address')
 features = compare.compute(candidates, hospital_accounts,
                            hospital_reimbursement)
+
+number_comparisons = len(candidates)
+runtime = round(time() - start, 3)
+print(f"Number of comparisons using all pairs: {number_comparisons} in {runtime} seconds")
+
 
 # Limit the number of comparisons using blocking
 # We only compare hospitals that are in the same state leading to far fewer comparisons
@@ -45,9 +47,6 @@ indexer.block(left_on='State', right_on='Provider State')
 
 start = time()
 candidates = indexer.index(hospital_accounts, hospital_reimbursement)
-number_comparisons = len(candidates)
-runtime = round(time() - start, 3)
-print(f"Number of comparisons using reduced pairs: {number_comparisons} in {runtime} seconds")
 
 # Set up the comparison logic
 compare = recordlinkage.Compare()
@@ -66,3 +65,7 @@ compare.string('Address',
                label='Hosp_Address')
 features = compare.compute(candidates, hospital_accounts,
                            hospital_reimbursement)
+
+number_comparisons = len(candidates)
+runtime = round(time() - start, 3)
+print(f"Number of comparisons using reduced pairs: {number_comparisons} in {runtime} seconds")
