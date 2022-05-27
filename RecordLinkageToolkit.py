@@ -140,3 +140,10 @@ potential_dupes['Score'] = potential_dupes.loc[:,
                                                'City':'Hosp_Address'].sum(axis=1)
 
 print(potential_dupes.head(7))
+
+# The records in "potential_dupes" have a high likelihood of being duplicated
+# Let's check the account number 51567 (Account_Num_1)
+print(hospital_dupes.loc[51567, :])
+
+# Compare it with account number 41166 (Account_Num_2)
+print(hospital_dupes.loc[41166, :])
